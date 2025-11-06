@@ -1,0 +1,25 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.9;
+
+contract CrowdFunding {
+
+    // Campaign structure to hold campaign details
+    //like an object that defines the properties of a crowdfunding campaign
+    struct Campaign {
+        address owner;
+        string title;
+        string description;
+        uint256 target;
+        uint256 deadline;
+        uint256 amountCollected;
+        string image;
+        address[] donators;
+        uint256[] donations;
+    }
+
+    //Mapping to store campaigns with unique IDs
+    //like a dictionary that links each campaign ID to its corresponding Campaign details
+    //so each IDs points to a Campaign structure
+    mapping(uint256 => Campaign) public campaigns;
+}
++
