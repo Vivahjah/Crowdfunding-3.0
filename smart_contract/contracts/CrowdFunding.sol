@@ -58,12 +58,40 @@ contract CrowdFunding {
 
 
     // Function to donate to a specific campaign
-    function donateToCampaign() {}
+    function donateToCampaign(uint256 _id) public payable {//payable keyword shows that this function will receive money
+        uint256 amount = msg.value;// Get the amount of Ether sent with the transaction
+
+        Campaign storage campaign = campaigns[_id];// Retrieve the campaign using the provided ID
+
+        campaign.donators.push(msg.sender);// Add the donor's address to the donators array
+        campaign.donations.push(amount);// Add the donation amount to the donations array
+
+        // Attempt to transfer the donated amount to the campaign owner
+        (bool sent, ) = payable(campaign.owner).call{value: amount}("");
+
+        // If the transfer is successful, update the amount collected for the campaign
+        if (sent) {
+            campaign.amountCollected += amount;
+        }
+
+    }
 
     // Function to get the list of donators and their donations for a specific campaign
-    function getDonators() {}
+    function getDonators(uint256 _id) view public returns (address[] memory, uint256[] memory) {
+        return (campaigns[_id].donators, campaigns[_id].donations);// Return the donators and donations arrays for the specified campaign
+
+    }
 
     // Function to get all campaigns
-    function getCampaigns() {}
+    function getCampaigns() public view returns (Campaign[] memory) {
+        Campaign[] memory allCampaigns = new Campaign[](numberOfCampaigns);// Create a temporary array to hold all campaigns
+
+        for (uint i = 0; i < numberOfCampaigns; i++) {
+            Campaign storage item = campaigns[i];// Retrieve each campaign from the mapping
+            allCampaigns[i] = item;// Add the campaign to the temporary array
+        }
+
+        return allCampaigns; // Return the array of all campaigns
+    }
+    
 }
-+
