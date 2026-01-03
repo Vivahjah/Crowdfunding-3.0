@@ -6,5 +6,10 @@ smart_contract/artifacts
 smart_contract/node_modules
 smart_contract/typechain
 smart_contract/typechain-types
+
+
+#frontend files
 smart_contract/.env
+client/.env
+client/node_modules
 
