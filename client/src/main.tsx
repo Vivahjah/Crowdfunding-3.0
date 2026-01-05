@@ -8,8 +8,12 @@ import "./index.css";
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThirdwebProvider >
-    
+
+      <Router>
         <App />
+
+      </Router>
+    
     
     </ThirdwebProvider>
   </React.StrictMode>
