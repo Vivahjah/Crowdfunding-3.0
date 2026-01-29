@@ -5,10 +5,10 @@ import React from 'react'
 type FormFieldProps = {
   labelName?: string;
   placeholder: string;
-  inputType: string;
+  inputType?: string;
   isTextArea?: boolean;
-  value: string;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  value?: string;
+  handleChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
 const FormField = ({ labelName, placeholder, inputType, isTextArea, value, handleChange } : FormFieldProps) => {
