@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-// import { ethers } from 'ethers';
+import { ethers } from 'ethers';
 
 // import { useStateContext } from '../context';
 import { money } from '../assets';
 import { CustomButton, FormField, Loader } from '../components';
+import { useCampaignStore } from '../context';
 // import { checkIfImage } from '../utils';
+import {useActiveAccount} from "thirdweb/react";
 
 
 
@@ -24,11 +26,13 @@ type FormFieldChangeHandler = (fieldName: keyof FormData, e: React.ChangeEvent<H
 
 const CreateCampaign = () => {
 
+const activeAccount = useActiveAccount();
 
-
+  const createCampaign = useCampaignStore((state) => state.createCampaign);
+  const setAccount = useCampaignStore((state) => state.setAccount);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const { createCampaign } = useStateContext();
+
   const [form, setForm] = useState<FormData>({
     name: '',
     title: '',
@@ -45,8 +49,20 @@ const CreateCampaign = () => {
 
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if(!form.title || !form.description || !form.target || !form.deadline || !form.image ) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      await createCampaign(form);
+      console.log("Campaign created successfully");
+    } catch (error) {
+      console.error("Error creating campaign:", error);
+    }
     console.log(form);
     // Submit logic here
 

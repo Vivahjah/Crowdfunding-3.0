@@ -43,10 +43,10 @@ interface CampaignStore {
   setAccount: (account?: Account) => void;
 
   createCampaign: (form: CampaignForm) => Promise<void>;
-  getCampaigns?: () => Promise<Campaign[]>;
-  getUserCampaigns?: () => Promise<Campaign[]>;
-  donate?: (pId: number, amount: string) => Promise<void>;
-  getDonations?: (pId: number) => Promise<Donation[]>;
+  getCampaigns: () => Promise<Campaign[]>;
+  getUserCampaigns: () => Promise<Campaign[]>;
+  donate: (pId: number, amount: string) => Promise<void>;
+  getDonations: (pId: number) => Promise<Donation[]>;
 }
 
 
