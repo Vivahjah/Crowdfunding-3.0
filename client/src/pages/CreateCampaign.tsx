@@ -8,6 +8,7 @@ import { CustomButton, FormField, Loader } from '../components';
 import { useCampaignStore } from '../context';
 // import { checkIfImage } from '../utils';
 import {useActiveAccount} from "thirdweb/react";
+import { checkIfImage } from '../utils';
 
 
 
@@ -27,6 +28,7 @@ type FormFieldChangeHandler = (fieldName: keyof FormData, e: React.ChangeEvent<H
 const CreateCampaign = () => {
 
 const activeAccount = useActiveAccount();
+console.log("Active Account:", activeAccount?.address);
 
   const createCampaign = useCampaignStore((state) => state.createCampaign);
   const setAccount = useCampaignStore((state) => state.setAccount);
@@ -49,36 +51,45 @@ const activeAccount = useActiveAccount();
 
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  
 
-    if(!form.title || !form.description || !form.target || !form.deadline || !form.image ) {
-      alert('Please fill in all required fields');
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  if (!activeAccount) {
+    alert("Please connect your wallet to create a campaign.");
+    return;
+  }
+
+  if (!form.title || !form.description || !form.target || !form.deadline) {
+    alert('Please fill in all required fields');
+    return;
+  }
+
+  // If checkIfImage can be converted to return a Promise
+   checkIfImage(form.image, async (imageExists) => {
+      if (!imageExists) {
+      alert("Please provide a valid image URL");
+      setForm({ ...form, image: '' });
       return;
     }
+  })
 
-    try {
-      await createCampaign(form);
-      console.log("Campaign created successfully");
-    } catch (error) {
-      console.error("Error creating campaign:", error);
-    }
-    console.log(form);
-    // Submit logic here
+  try {
+      
 
-
-    // checkIfImage(form.image, async (exists) => {
-    //   if(exists) {
-    //     setIsLoading(true)
-    //     await createCampaign({ ...form, target: ethers.utils.parseUnits(form.target, 18)})
-    //     setIsLoading(false);
-    //     navigate('/');
-    //   } else {
-    //     alert('Provide valid image URL')
-    //     setForm({ ...form, image: '' });
-    //   }
-    // })
+    setIsLoading(true);
+    await createCampaign(form);
+    console.log("Campaign created successfully");
+    navigate('/');
+  } catch (error) {
+    console.error("Error creating campaign:", error);
+    alert("Failed to create campaign. Please try again.");
+  } finally {
+    setIsLoading(false);
   }
+};
+
 
   return (
     <div className="bg-[#1c1c24] flex justify-center items-center flex-col rounded-[10px] sm:p-10 p-4">

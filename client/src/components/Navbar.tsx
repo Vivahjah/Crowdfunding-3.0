@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { CustomButton } from "./"
 import { logo, menu, search, thirdweb } from "../assets"
 import { navlinks } from "../constants"
+import { useCampaignStore } from "../context"
 
 
 
@@ -13,7 +14,33 @@ const Navbar = () => {
   const [toggleDrawer, setToggleDrawer] = useState<boolean>(false)
   const navigate = useNavigate()
 
-  const address = "0x123...abc"
+  // Get state and actions from store
+  const {
+    address,
+    connect,
+    disconnect,
+    isConnecting
+  } = useCampaignStore()
+
+
+
+  // Format address for display
+  const formattedAddress = address
+    ? `${address.substring(0, 4)}...${address.substring(address.length - 4)}`
+    : ""
+
+  const handleConnect = async () => {
+    try {
+      await connect()
+    } catch (error) {
+      console.error("Failed to connect:", error)
+    }
+  }
+
+  const handleDisconnect = () => {
+    disconnect()
+  }
+
 
 
 
@@ -35,12 +62,11 @@ const Navbar = () => {
       <div className="sm:flex hidden flex-row justify-end gap-4">
         <CustomButton
           btnType="button"
-          title={!address ? "Create a campaign" : "Connect"}
+          title={!address ? "Create a campaign" : 
+          formattedAddress
+          }
           styles={!address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
-          handleClick={() => {
-            if (address) navigate("create-campaign")
-            else console.log("connect")
-          }}
+         handleClick={address ? handleDisconnect : handleConnect}
         />
         <Link to="/profile">
           <div className="w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center 
