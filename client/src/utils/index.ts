@@ -7,10 +7,16 @@
 
 
 
-export const daysLeft = (deadline: string | Date): string => {
-    const deadlineTime = typeof deadline === 'string'
-        ? new Date(deadline).getTime()
-        : deadline.getTime();
+export const daysLeft = (deadline: string | Date | number): string => {
+    let deadlineTime: number;
+
+    if (typeof deadline === 'string') {
+        deadlineTime = new Date(deadline).getTime();
+    } else if (typeof deadline === 'number') {
+        deadlineTime = deadline;
+    } else {
+        deadlineTime = deadline.getTime();
+    }
 
     const difference = deadlineTime - Date.now();
     const remainingDays = difference / (1000 * 3600 * 24);

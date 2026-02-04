@@ -7,7 +7,7 @@ import { money } from '../assets';
 import { CustomButton, FormField, Loader } from '../components';
 import { useCampaignStore } from '../context';
 // import { checkIfImage } from '../utils';
-import {useActiveAccount} from "thirdweb/react";
+// import {useActiveAccount} from "thirdweb/react";
 import { checkIfImage } from '../utils';
 
 
@@ -27,9 +27,9 @@ type FormFieldChangeHandler = (fieldName: keyof FormData, e: React.ChangeEvent<H
 
 const CreateCampaign = () => {
 
-const activeAccount = useActiveAccount();
-console.log("Active Account:", activeAccount?.address);
-
+    // const activeAccount = useActiveAccount();
+    // console.log("Active Account:", activeAccount?.address);
+  const activeAccount = useCampaignStore((state) => state.account);
   const createCampaign = useCampaignStore((state) => state.createCampaign);
   const setAccount = useCampaignStore((state) => state.setAccount);
   const navigate = useNavigate();

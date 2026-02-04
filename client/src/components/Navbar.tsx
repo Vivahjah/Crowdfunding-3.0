@@ -62,11 +62,9 @@ const Navbar = () => {
       <div className="sm:flex hidden flex-row justify-end gap-4">
         <CustomButton
           btnType="button"
-          title={!address ? "Create a campaign" : 
-          formattedAddress
-          }
+          title={!address ? "Connect Wallet"  : "Create Campaign"  }
           styles={!address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
-         handleClick={address ? handleDisconnect : handleConnect}
+         handleClick={address ? () => navigate("/create-campaign") : handleConnect}
         />
         <Link to="/profile">
           <div className="w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center 
