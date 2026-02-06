@@ -38,7 +38,7 @@ export interface Campaign {
     pId: number;
 }
 
-interface Donation {
+export interface Donation {
     donator: string;
     donation: string;
 }
@@ -179,7 +179,7 @@ export const useCampaignStore = create<CampaignStore>((set, get) => ({
             } as any);
 
 
-            
+
 
             const campaigns = data as any[];
 
@@ -217,7 +217,7 @@ export const useCampaignStore = create<CampaignStore>((set, get) => ({
 
         const tx = prepareContractCall({
             contract,
-            method: "function donateToCampaign(uint256 pId) payable",
+            method: "function donateToCampaign(uint256 _id) payable",
             params: [BigInt(pId)],
             value: ethers.parseEther(amount),
         });
@@ -226,6 +226,11 @@ export const useCampaignStore = create<CampaignStore>((set, get) => ({
             transaction: tx,
             account,
         });
+
+        console.log("Donation successful!");
+
+        // You might want to refresh your campaign data here
+        // or show a success message to the user
     },
 
     /* -------------------- Get Donations -------------------- */

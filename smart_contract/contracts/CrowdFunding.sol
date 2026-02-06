@@ -57,24 +57,31 @@ contract CrowdFunding {
     }
 
 
+ 
     // Function to donate to a specific campaign
-    function donateToCampaign(uint256 _id) public payable {//payable keyword shows that this function will receive money
-        uint256 amount = msg.value;// Get the amount of Ether sent with the transaction
+function donateToCampaign(uint256 _id) public payable {
+    uint256 amount = msg.value;
 
-        Campaign storage campaign = campaigns[_id];// Retrieve the campaign using the provided ID
+    require(amount > 0, "Donation amount must be greater than 0");
+    require(_id < numberOfCampaigns, "Invalid campaign ID");
+    require(block.timestamp < campaigns[_id].deadline, "Campaign has ended");
 
-        campaign.donators.push(msg.sender);// Add the donor's address to the donators array
-        campaign.donations.push(amount);// Add the donation amount to the donations array
+    Campaign storage campaign = campaigns[_id];
+    
+    // Add the donor's address to the donators array
+    campaign.donators.push(msg.sender);
+    // Add the donation amount to the donations array
+    campaign.donations.push(amount);
+    
+    // Increment amountCollected FIRST
+    campaign.amountCollected += amount;
 
-        // Attempt to transfer the donated amount to the campaign owner
-        (bool sent, ) = payable(campaign.owner).call{value: amount}("");
+    // Then transfer the funds to the campaign owner
+    (bool sent, ) = payable(campaign.owner).call{value: amount}("");
 
-        // If the transfer is successful, update the amount collected for the campaign
-        if (sent) {
-            campaign.amountCollected += amount;
-        }
-
-    }
+    // If transfer fails, revert the transaction
+    require(sent, "Failed to send donation to campaign owner");
+}
 
     // Function to get the list of donators and their donations for a specific campaign
     function getDonators(uint256 _id) view public returns (address[] memory, uint256[] memory) {

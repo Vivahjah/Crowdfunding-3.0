@@ -73,6 +73,7 @@ const CreateCampaign = () => {
       setForm({ ...form, image: '' });
       return;
     }
+    return;
   })
 
   try {
@@ -81,6 +82,7 @@ const CreateCampaign = () => {
     setIsLoading(true);
     await createCampaign(form);
     console.log("Campaign created successfully");
+    setIsLoading(false);
     navigate('/');
   } catch (error) {
     console.error("Error creating campaign:", error);
